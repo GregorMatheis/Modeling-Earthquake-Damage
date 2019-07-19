@@ -3,8 +3,7 @@ title : "Richter's Predictor: Modeling Earthquake Damage"
 author : Gregor Matheis
 date: 19th July 2019
 options:
-  out_path : docs/base_exploration.md
-  doctype :  github
+  out_path : docs/base_exploration.html
   echo : false
 ---
 

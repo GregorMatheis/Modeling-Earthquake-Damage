@@ -1,3 +1,7 @@
+using Weave
+weave(joinpath("./base_exploration.jmd", out_path=:pwd, doctype = "md2html")
+
+
 
 
 
@@ -19,4 +23,12 @@ There are three grades of demage used:
 The scale 'only' ordinal, the difference in degree of damage between 1 and 2 isn't neiscery the same as 2 to 3
 
 #### Distribution in training set
-![](figures/base_exploration_2_1.svg)
+````
+Error: The Cairo and Fontconfig packages are necessary for saving as Compos
+e.PNG.
+Add them with the package manager if necessary, then run `import Cairo,
+Fontconfig` before invoking `Compose.PNG`.
+````
+
+
+![](figures/base_exploration_2_1.png)

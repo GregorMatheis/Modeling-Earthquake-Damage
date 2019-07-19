@@ -2,6 +2,10 @@
 # import Pkg
 # Pkg.add("MLJ")
 # Pkg.add("MLJModels")
+
+using Weave
+weave("./base_exploration.jmd", "md2html")
+
 using CSV
 using DataFrames
 using Gadfly
@@ -122,3 +126,5 @@ test_values = CSV.read("./Data/test_values.csv") |> DataFrame
 categorical!(test_values)
 yhat = predict(mach, test_values[2:end])
 yhat
+
+plot(train_dt, x = :damage_grade, Geom.histogram)
