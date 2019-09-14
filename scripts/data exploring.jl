@@ -4,16 +4,12 @@
 # Pkg.add("MLJModels")
 
 #using Weave 
-#weave("./base_exploration.jmd", "md2html") 
-
-using CSV
-using DataFrames
-using Gadfly
-using Statistics
-using StatsBase
-using MLJ, MLJModels
-using CategoricalArrays
-
+#weave("./reports/base_exploration.jmd", "md2html") 
+import Pkg
+for x in ["MLJ", "MLJModels", "CategoricalArrays", "CSV"] #DataFrames", "Gadfly", "Statistics", "StatsBase", 
+    Pkg.add(x)
+end
+using CSV, DataFrames, Gadfly, Statistics, StatsBase, MLJ, MLJModels, CategoricalArrays
 
 train_values = CSV.read("./Data/train_values.csv") |> DataFrame
 train_labels = CSV.read("./Data/train_labels.csv") |> DataFrame
@@ -59,7 +55,7 @@ plot(train_dt,
     SVGJS(7inch, 7inch)
 
 
-    categorical!(train_dt, :damage_grade)
+categorical!(train_dt, :damage_grade)
 X = DataFrame([try float(x); catch; x end for x = eachcol(train_dt[2:8])], names(train_dt[2:8]));
 z = train_dt[:,end];
 
@@ -119,7 +115,9 @@ wrapped_model = WrappedBoost(XGBoostClassifier(
     base_score = 0.5,
     eval_metric = "mlogloss",
     seed = 0))
-mach = machine(wrapped_model, X, z)
+
+zz = CategoricalArray(string.(z))
+mach = machine(wrapped_model, X, zz)#parse.(Int,string.(z)))
 evaluate!(mach, resampling=Holdout(fraction_train=0.7, shuffle=true), measure=misclassification_rate)
 
 test_values = CSV.read("./Data/test_values.csv") |> DataFrame

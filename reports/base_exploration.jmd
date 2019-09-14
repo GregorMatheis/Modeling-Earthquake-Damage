@@ -27,12 +27,14 @@ More details about the project and data set can be found at [https://www.drivend
 ## Damage grade
 
 There are three grades of demage used:
-    1. represents low damage
-    2. represents a medium amount of damage
-    3. represents almost complete destruction
-The scale 'only' ordinal, the difference in degree of damage between 1 and 2 isn't neiscery the same as 2 to 3
+  1. represents low damage
+  2. represents a medium amount of damage
+  3. represents almost complete destruction
+The scale is 'only' ordinal, the difference in degree of damage between 1 and 2 isn't neiscery the same as 2 to 3
 
 #### Distribution in training set
+
+##### Damage distribuition
 ```julia 
 plot(train_dt, x = :damage_grade, Geom.histogram,
     Scale.x_continuous(minvalue=1),
@@ -42,3 +44,29 @@ plot(train_dt, x = :damage_grade, Geom.histogram,
     Guide.ylabel("# cases")
     ) |> SVGJS()
 ```
+- There are no buildings without damages in the dataset
+- Most buildings have been damaged to a medium or large part
+- With only `j round(sum(train_dt.damage_grade .== 1)/sum(train_dt.damage_grade .> 0)*100, digits = 1)`% of cases in category 1 the imbalance can be a problem for some classifiers
+
+We can suspect that many predictors are related to the demage degree, for example age of the building, height as well as social status/income of the people who live there. Going forward the description of those variables and their relation to the damage will be in focus
+##### House age distribuition
+```julia 
+plot(train_dt, x = :age, Geom.histogram,
+    Scale.x_continuous(minvalue=1),
+    Scale.y_continuous(labels = x -> string(Int(round(x/1000, digits=0))) * " k"),
+    Guide.title("House age distribution"),
+    Guide.xlabel("Age in years"),
+    Guide.ylabel("# cases")
+    ) |> SVGJS()
+
+plot(train_dt[train_dt.age .<500,:], x = :age, Geom.histogram,
+    Scale.x_continuous(minvalue=1),
+    Scale.y_continuous(labels = x -> string(Int(round(x/1000, digits=0))) * " k"),
+    Guide.title("House age distribution (excluded extrem values)"),
+    Guide.xlabel("Age in years"),
+    Guide.ylabel("# cases")
+    ) |> SVGJS()
+```
+- Vast majority of houses is not older then 50 years (`j round(mean(train_dt.age .< 50)*100,digits = 1)`)
+- The average house age is `j round(mean(train_dt.age),digits = 1)` (Median: `j round(median(train_dt.age),digits = 1)`)
+
